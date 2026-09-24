@@ -39,3 +39,8 @@ Test the connection with:
 ```console
 python -m sandbox llm
 ```
+##Design Goal: My design goal was to make the other player have a role to play and some form of interaction (waving).
+
+##Short Reflection: After experimenting and seeing how to the agent behaves I knew that I also wanted the other players to wave at the player so they can feel a little more lively otherwise they were gonna seem like bots in auto mode repeating the same task over and over again so hopefully waving at the player makes them feel a little less bot like.
+
+#AI Disclosure and reflection: I used a AI agent (Codex) for my agent to check for the NPC behavior and help with the agent roles and interactable function.
