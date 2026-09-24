@@ -14,18 +14,38 @@ class Agent:
     """Walks out of its home, visits the pump, and acknowledges people it sees."""
 
     def reset(self, seed: int, observation: ThreeBranchesObservation) -> None:
-        """Prepare for a day. This deliberately weak starter remembers nothing."""
+        """Prepare for a day and assign this character's village role."""
+
+        self.role = self._role_for(me.player_id(observation))
+
+    def _role_for(self, character_id: str) -> str:
+        """Map a character identifier to its assigned village role."""
+
+        index = int(character_id.split("_")[1])
+        if index == 1:
+            return "well_keeper"
+        if index <= 5:
+            return "farmer"
+        if index <= 8:
+            return "sweeper"
+        return "wanderer"
 
     def act(self, observation: ThreeBranchesObservation) -> ThreeBranchesAction:
         """Choose one simple order from current sight and standing village knowledge."""
 
         heading = me.heading(observation)
+        seen_people = people.seen(observation)
+        if seen_people:
+            # Greet the first visible villager face-to-face before resuming the routine.
+            person = seen_people[0]
+            return action.stand(geometry.heading_to(me.position(observation), person["position"]), "wave")
+
         usable = props.usable(observation)
         if usable is not None and usable["type"] == "bench":
             return action.stand(heading, "use")
 
         here = me.position(observation)
-        expression = "wave" if people.seen(observation) else "none"
+        expression = "none"
         home = me.home(observation)
         door = layout.doorway(observation, home) if home != "none" else None
         here_cell = layout.cell_at(observation, here)
